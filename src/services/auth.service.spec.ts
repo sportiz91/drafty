@@ -19,6 +19,7 @@ function buildUser(overrides: Partial<User> = {}): User {
     id: 'user-1',
     email: 'santi@example.com',
     passwordHash: 'hash',
+    stripeCustomerId: null,
     createdAt: new Date('2026-06-12T00:00:00Z'),
     updatedAt: new Date('2026-06-12T00:00:00Z'),
     ...overrides,

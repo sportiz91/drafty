@@ -21,6 +21,7 @@ const fullUser: User = {
   id: 'user-1',
   email: 'santi@example.com',
   passwordHash: 'hash',
+  stripeCustomerId: null,
   createdAt: new Date(),
   updatedAt: new Date(),
 };
