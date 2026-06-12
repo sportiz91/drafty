@@ -1,4 +1,6 @@
 /** @jest-environment node */
+import crypto from 'crypto';
+
 import bcrypt from 'bcryptjs';
 
 import * as refreshTokenActions from '@/database/actions/refresh-token-actions';
@@ -112,11 +114,11 @@ describe('login', () => {
 });
 
 describe('logout', () => {
-  it('deletes the refresh token when present', async () => {
+  it('deletes the refresh token (by hash) when present', async () => {
     await authService.logout('some-refresh-token');
 
     expect(mockedRefreshTokenActions.deleteRefreshToken).toHaveBeenCalledWith(
-      'some-refresh-token'
+      crypto.createHash('sha256').update('some-refresh-token').digest('hex')
     );
   });
 

@@ -1,6 +1,5 @@
 import bcrypt from 'bcryptjs';
 
-import * as refreshTokenActions from '@/database/actions/refresh-token-actions';
 import * as userActions from '@/database/actions/user-actions';
 import type { User } from '@/database/schema/users-schema';
 import * as tokenService from '@/services/token.service';
@@ -8,6 +7,12 @@ import type { AuthTokens, PublicUser } from '@/types/auth.types';
 import type { LoginInput, RegisterInput } from '@/validators/auth.validators';
 
 const BCRYPT_ROUNDS = 12;
+
+// bcrypt hash of a random throwaway string. Compared when the email is
+// unknown so both login paths cost one bcrypt compare — otherwise the
+// fast "email not found" response is a user-enumeration timing oracle.
+const DUMMY_PASSWORD_HASH =
+  '$2b$12$KzG1tkFSsi1Z7.JFV9QK.O1AVhCQtHn1V9fJe38DXemuaZDif8c5u';
 
 export function toPublicUser(user: User): PublicUser {
   return {
@@ -40,17 +45,14 @@ export async function login(
 ): Promise<{ user: PublicUser; tokens: AuthTokens }> {
   const user = await userActions.getUserByEmail(input.email.toLowerCase());
 
-  // Same error for unknown email and wrong password — never leak which.
-  if (!user) {
-    throw new Error('Invalid credentials');
-  }
-
+  // Always run exactly one bcrypt compare, and return the same error for
+  // unknown email and wrong password — no enumeration via timing or text.
   const passwordMatches = await bcrypt.compare(
     input.password,
-    user.passwordHash
+    user?.passwordHash ?? DUMMY_PASSWORD_HASH
   );
 
-  if (!passwordMatches) {
+  if (!user || !passwordMatches) {
     throw new Error('Invalid credentials');
   }
 
@@ -69,6 +71,6 @@ export async function getAuthenticatedUser(
 
 export async function logout(refreshToken: string | undefined): Promise<void> {
   if (refreshToken) {
-    await refreshTokenActions.deleteRefreshToken(refreshToken);
+    await tokenService.revokeRefreshToken(refreshToken);
   }
 }

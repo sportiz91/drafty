@@ -16,7 +16,9 @@ export async function verifyAccessTokenEdge(
     throw new Error('JWT_SECRET is not set');
   }
 
-  const { payload } = await jwtVerify(token, new TextEncoder().encode(secret));
+  const { payload } = await jwtVerify(token, new TextEncoder().encode(secret), {
+    algorithms: ['HS256'],
+  });
 
   return payload as unknown as AccessTokenPayload;
 }

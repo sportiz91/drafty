@@ -11,6 +11,15 @@ const ACCESS_TOKEN_TTL_SECONDS = 15 * 60;
 const REFRESH_TOKEN_TTL_DAYS = 7;
 
 /**
+ * Refresh tokens are credentials — stored hashed (like passwords) so a
+ * leaked database copy cannot be replayed. SHA-256 (not bcrypt) is right
+ * here: the input is 256 bits of entropy, not a guessable password.
+ */
+function hashRefreshToken(token: string): string {
+  return crypto.createHash('sha256').update(token).digest('hex');
+}
+
+/**
  * Issues a short-lived JWT access token plus an opaque refresh token
  * persisted in the database.
  */
@@ -30,7 +39,7 @@ export async function generateAuthTokens(user: {
   );
 
   await refreshTokenActions.createRefreshToken({
-    token: refreshToken,
+    token: hashRefreshToken(refreshToken),
     userId: user.id,
     expiresAt,
   });
@@ -45,7 +54,10 @@ export async function generateAuthTokens(user: {
 /** Verifies the JWT access token. Throws on missing/expired/forged tokens. */
 export function verifyAccessToken(token: string): AccessTokenPayload {
   try {
-    const payload = jwt.verify(token, serverConfig.jwtSecret);
+    // Algorithm pinned — never accept tokens signed with anything else.
+    const payload = jwt.verify(token, serverConfig.jwtSecret, {
+      algorithms: ['HS256'],
+    });
 
     if (typeof payload === 'string') {
       throw new Error('Unexpected token payload');
@@ -67,14 +79,15 @@ export function verifyAccessToken(token: string): AccessTokenPayload {
 export async function rotateRefreshToken(
   refreshToken: string
 ): Promise<AuthTokens> {
-  const stored = await refreshTokenActions.getRefreshTokenByValue(refreshToken);
+  const hashed = hashRefreshToken(refreshToken);
+  const stored = await refreshTokenActions.getRefreshTokenByValue(hashed);
 
   if (!stored) {
     throw new Error('Invalid refresh token');
   }
 
   if (stored.expiresAt.getTime() < Date.now()) {
-    await refreshTokenActions.deleteRefreshToken(refreshToken);
+    await refreshTokenActions.deleteRefreshToken(hashed);
     throw new Error('Refresh token expired');
   }
 
@@ -84,7 +97,12 @@ export async function rotateRefreshToken(
     throw new Error('User not found');
   }
 
-  await refreshTokenActions.deleteRefreshToken(refreshToken);
+  await refreshTokenActions.deleteRefreshToken(hashed);
 
   return generateAuthTokens(user);
+}
+
+/** Revokes a refresh token (logout). No-op when the token is unknown. */
+export async function revokeRefreshToken(refreshToken: string): Promise<void> {
+  await refreshTokenActions.deleteRefreshToken(hashRefreshToken(refreshToken));
 }

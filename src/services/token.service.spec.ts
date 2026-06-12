@@ -1,4 +1,6 @@
 /** @jest-environment node */
+import crypto from 'crypto';
+
 import * as refreshTokenActions from '@/database/actions/refresh-token-actions';
 import * as userActions from '@/database/actions/user-actions';
 import type { User } from '@/database/schema/users-schema';
@@ -11,6 +13,9 @@ const mockedRefreshTokenActions = jest.mocked(refreshTokenActions);
 const mockedUserActions = jest.mocked(userActions);
 
 const user = { id: 'user-1', email: 'santi@example.com' };
+
+const sha256 = (value: string) =>
+  crypto.createHash('sha256').update(value).digest('hex');
 
 const fullUser: User = {
   id: 'user-1',
@@ -29,15 +34,16 @@ describe('generateAuthTokens', () => {
     expect(payload).toEqual({ userId: 'user-1', email: 'santi@example.com' });
   });
 
-  it('persists the refresh token with a future expiry', async () => {
+  it('persists the refresh token hashed, with a future expiry', async () => {
     const before = Date.now();
 
-    await tokenService.generateAuthTokens(user);
+    const tokens = await tokenService.generateAuthTokens(user);
 
     const stored =
       mockedRefreshTokenActions.createRefreshToken.mock.calls[0]?.[0];
     expect(stored?.userId).toBe('user-1');
-    expect(stored?.token).toMatch(/^[a-f0-9]{64}$/);
+    // The DB never sees the raw token — only its SHA-256 hash.
+    expect(stored?.token).toBe(sha256(tokens.refreshToken));
     expect(stored?.expiresAt.getTime()).toBeGreaterThan(before);
   });
 });
@@ -74,8 +80,9 @@ describe('rotateRefreshToken', () => {
       tokenService.rotateRefreshToken('expired-token')
     ).rejects.toThrow('Refresh token expired');
 
+    // Tokens are stored and deleted by their SHA-256 hash, never raw.
     expect(mockedRefreshTokenActions.deleteRefreshToken).toHaveBeenCalledWith(
-      'expired-token'
+      sha256('expired-token')
     );
   });
 
@@ -92,7 +99,7 @@ describe('rotateRefreshToken', () => {
     const tokens = await tokenService.rotateRefreshToken('valid-token');
 
     expect(mockedRefreshTokenActions.deleteRefreshToken).toHaveBeenCalledWith(
-      'valid-token'
+      sha256('valid-token')
     );
     expect(tokens.refreshToken).not.toBe('valid-token');
     expect(tokenService.verifyAccessToken(tokens.accessToken).userId).toBe(
