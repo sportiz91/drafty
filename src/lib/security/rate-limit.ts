@@ -5,6 +5,8 @@
  */
 import { NextResponse, type NextRequest } from 'next/server';
 
+import { serverConfig } from '@/lib/config/config';
+
 const hits = new Map<string, number[]>();
 
 export function rateLimit(
@@ -49,6 +51,10 @@ export function enforceRateLimit(
   limit: number,
   windowMs: number
 ): NextResponse | null {
+  if (serverConfig.rateLimitDisabled) {
+    return null;
+  }
+
   const key = `${bucket}:${getClientIp(request)}`;
 
   if (rateLimit(key, limit, windowMs)) {

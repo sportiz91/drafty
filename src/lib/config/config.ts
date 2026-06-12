@@ -11,6 +11,12 @@ const serverConfigSchema = z.object({
     .enum(['true', 'false'])
     .default('false')
     .transform(value => value === 'true'),
+  // e2e runs many auth flows from one IP in seconds — the suite disables
+  // limits explicitly (rate limiting itself is unit-tested).
+  rateLimitDisabled: z
+    .enum(['true', 'false'])
+    .default('false')
+    .transform(value => value === 'true'),
 });
 
 export const serverConfig = serverConfigSchema.parse({
@@ -19,4 +25,5 @@ export const serverConfig = serverConfigSchema.parse({
   jwtAccessTokenExpiry: process.env.JWT_ACCESS_TOKEN_EXPIRY,
   databasePath: process.env.DATABASE_PATH,
   cookieSecure: process.env.COOKIE_SECURE,
+  rateLimitDisabled: process.env.RATE_LIMIT_DISABLED,
 });

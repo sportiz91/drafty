@@ -3,6 +3,9 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
+  // Local runs hit the dev server, which compiles routes on demand — first
+  // navigation after a cold start can exceed the 5s default.
+  expect: { timeout: 10_000 },
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? [['html', { open: 'never' }], ['github']] : 'list',
@@ -18,5 +21,7 @@ export default defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
+    // The suite hammers auth endpoints from one IP; limits are unit-tested.
+    env: { RATE_LIMIT_DISABLED: 'true' },
   },
 });
