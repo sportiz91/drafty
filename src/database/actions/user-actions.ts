@@ -20,3 +20,13 @@ export async function getUserByEmail(email: string): Promise<User | undefined> {
 export async function getUserById(id: string): Promise<User | undefined> {
   return db.query.users.findFirst({ where: eq(users.id, id) });
 }
+
+export async function setStripeCustomerId(
+  userId: string,
+  stripeCustomerId: string
+): Promise<void> {
+  await db
+    .update(users)
+    .set({ stripeCustomerId, updatedAt: new Date() })
+    .where(eq(users.id, userId));
+}
