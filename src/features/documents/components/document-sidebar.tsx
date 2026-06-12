@@ -11,7 +11,7 @@ type DocumentSidebarProps = {
 export function DocumentSidebar({ documents, activeId }: DocumentSidebarProps) {
   return (
     <aside
-      className="w-64 shrink-0 rounded-[var(--radius-panel)] bg-surface p-4 shadow-[var(--shadow-card)]"
+      className="w-full lg:w-64 lg:shrink-0 rounded-[var(--radius-panel)] bg-surface p-4 shadow-[var(--shadow-card)]"
       data-id="document-sidebar"
     >
       <NewDocumentButton />

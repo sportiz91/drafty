@@ -75,7 +75,7 @@ export default async function DocumentsPage({
   const documents = await documentService.listDocuments(session.userId);
 
   return (
-    <div className="flex gap-6" data-id="workspace">
+    <div className="flex flex-col gap-6 lg:flex-row" data-id="workspace">
       <DocumentSidebar documents={documents} />
       <section className="flex flex-1 items-center justify-center rounded-[var(--radius-card)] bg-surface p-10 text-center shadow-[var(--shadow-card)]">
         <div>

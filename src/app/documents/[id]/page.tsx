@@ -63,7 +63,7 @@ export default async function DocumentPage({ params }: DocumentPageProps) {
   }
 
   return (
-    <div className="flex gap-6">
+    <div className="flex flex-col gap-6 lg:flex-row">
       <DocumentSidebar documents={documents} activeId={document.id} />
       {/* key remounts the editor when navigating between documents */}
       <DocumentWorkspace key={document.id} document={document} />
