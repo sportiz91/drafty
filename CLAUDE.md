@@ -18,8 +18,8 @@ Requires **Node 22** (`.nvmrc`) and **pnpm 10** (`packageManager` pin, via corep
 | `pnpm db:generate`      | Drizzle migration from schema changes                 |
 | `pnpm db:migrate`       | Apply migrations (creates `./data/`)                  |
 
-Setup: `cp .env.example .env.local` (generate `JWT_SECRET` with `openssl rand -hex 32`) →
-`pnpm install` → `pnpm db:migrate` → `pnpm dev`.
+Setup: `pnpm install` → `pnpm setup` (creates `.env.local` with a generated `JWT_SECRET` and
+migrates the DB — cross-platform, Node-based) → `pnpm dev`.
 
 ## Architecture
 
