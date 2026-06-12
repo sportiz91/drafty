@@ -36,7 +36,7 @@ export function SiteFooter() {
         </nav>
       </div>
       <p className="mt-8 text-center text-sm text-ink-muted">
-        © 2026 Drafty. A demo product — payments run in Stripe test mode.
+        © 2026 Drafty. A demo product. Payments run in Stripe test mode.
       </p>
     </footer>
   );

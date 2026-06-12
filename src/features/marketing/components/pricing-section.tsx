@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { Reveal } from '@/features/marketing/components/reveal';
+
 const FREE_FEATURES = [
   'Email & password account',
   'Full product tour',
@@ -21,33 +23,37 @@ export function PricingSection() {
       className="mx-auto w-full max-w-6xl scroll-mt-8 px-6 py-16 sm:py-24"
       data-id="pricing"
     >
-      <div className="mx-auto max-w-2xl text-center">
+      <Reveal className="mx-auto max-w-2xl text-center">
         <h2 className="text-[35px] font-medium leading-[1.08] tracking-[-0.02em]">
           Start free.{' '}
           <span className="text-ink-muted">Go Pro when it clicks.</span>
         </h2>
         <p className="mt-4 text-lg text-ink-secondary">
-          No tiers to decode — one paid plan with everything in it.
+          No tiers to decode. One paid plan with everything in it.
         </p>
-      </div>
+      </Reveal>
       <div className="mx-auto mt-12 grid max-w-4xl gap-6 sm:grid-cols-2">
-        <PricingCard
-          badge="Free"
-          descriptor="For trying Drafty"
-          price="€0"
-          ctaLabel="Start free"
-          ctaDataId="pricing-free-cta"
-          features={FREE_FEATURES}
-        />
-        <PricingCard
-          badge="Pro"
-          descriptor="For people who write"
-          price="€9"
-          ctaLabel="Go Pro"
-          ctaDataId="pricing-pro-cta"
-          features={PRO_FEATURES}
-          isHighlighted
-        />
+        <Reveal>
+          <PricingCard
+            badge="Free"
+            descriptor="For trying Drafty"
+            price="€0"
+            ctaLabel="Start free"
+            ctaDataId="pricing-free-cta"
+            features={FREE_FEATURES}
+          />
+        </Reveal>
+        <Reveal delayMs={110}>
+          <PricingCard
+            badge="Pro"
+            descriptor="For people who write"
+            price="€9"
+            ctaLabel="Go Pro"
+            ctaDataId="pricing-pro-cta"
+            features={PRO_FEATURES}
+            isHighlighted
+          />
+        </Reveal>
       </div>
     </section>
   );

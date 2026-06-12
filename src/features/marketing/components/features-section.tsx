@@ -1,9 +1,11 @@
+import { Reveal } from '@/features/marketing/components/reveal';
+
 const FEATURES = [
   {
     number: '01',
     title: 'A real rich-text editor',
     description:
-      'Headings, lists, bold, italics — proper formatting, with keyboard shortcuts for all of it.',
+      'Headings, lists, bold and italics. Proper formatting, with keyboard shortcuts for all of it.',
   },
   {
     number: '02',
@@ -33,32 +35,31 @@ export function FeaturesSection() {
       data-id="features"
     >
       <div className="grid gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-16">
-        <div>
+        <Reveal>
           <h2 className="text-[35px] font-medium leading-[1.08] tracking-[-0.02em]">
             Everything you need.{' '}
             <span className="text-ink-muted">Nothing you don&apos;t.</span>
           </h2>
           <p className="mt-4 max-w-xs text-lg text-ink-secondary">
-            Drafty keeps the writing front and center — the workspace stays out
+            Drafty keeps the writing front and center. The workspace stays out
             of your way.
           </p>
-        </div>
+        </Reveal>
         <div className="grid gap-4 sm:grid-cols-2">
-          {FEATURES.map(feature => (
-            <div
-              key={feature.number}
-              className="rounded-[var(--radius-card)] bg-surface p-7 shadow-[var(--shadow-card)]"
-            >
-              <span className="inline-flex rounded-2xl bg-surface-muted px-3.5 py-2 text-sm font-medium">
-                {feature.number}
-              </span>
-              <h3 className="mt-6 text-[26px] font-medium leading-[1.12] tracking-[-0.02em]">
-                {feature.title}
-              </h3>
-              <p className="mt-3 text-base text-ink-secondary">
-                {feature.description}
-              </p>
-            </div>
+          {FEATURES.map((feature, index) => (
+            <Reveal key={feature.number} delayMs={index * 90}>
+              <div className="h-full rounded-[var(--radius-card)] bg-surface p-7 shadow-[var(--shadow-card)]">
+                <span className="inline-flex rounded-2xl bg-surface-muted px-3.5 py-2 text-sm font-medium">
+                  {feature.number}
+                </span>
+                <h3 className="mt-6 text-[26px] font-medium leading-[1.12] tracking-[-0.02em]">
+                  {feature.title}
+                </h3>
+                <p className="mt-3 text-base text-ink-secondary">
+                  {feature.description}
+                </p>
+              </div>
+            </Reveal>
           ))}
         </div>
       </div>

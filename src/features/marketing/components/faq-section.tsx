@@ -1,3 +1,5 @@
+import { Reveal } from '@/features/marketing/components/reveal';
+
 const FAQ_ITEMS = [
   {
     question: 'What is Drafty?',
@@ -7,17 +9,17 @@ const FAQ_ITEMS = [
   {
     question: 'What does the Free plan include?',
     answer:
-      'An account and a full look around. Writing — creating and editing documents — is part of Pro.',
+      'An account and a full look around. Creating and editing documents is part of Pro.',
   },
   {
     question: 'How does billing work?',
     answer:
-      'Pro is €9/month, billed through Stripe. This is a demo product, so checkout runs in Stripe test mode — use card 4242 4242 4242 4242.',
+      'Pro is €9/month, billed through Stripe. This is a demo product, so checkout runs in Stripe test mode. Use card 4242 4242 4242 4242.',
   },
   {
     question: 'Is my work saved automatically?',
     answer:
-      'Yes. Drafty autosaves as you type — there is no Save button to forget.',
+      'Yes. Drafty autosaves as you type, so there is no Save button to forget.',
   },
   {
     question: 'Can I cancel anytime?',
@@ -33,14 +35,14 @@ export function FaqSection() {
       className="mx-auto w-full max-w-6xl scroll-mt-8 px-6 py-16 sm:py-24"
       data-id="faq"
     >
-      <div className="mx-auto max-w-2xl text-center">
+      <Reveal className="mx-auto max-w-2xl text-center">
         <h2 className="text-[35px] font-medium leading-[1.08] tracking-[-0.02em]">
           Frequently asked questions
         </h2>
         <p className="mt-4 text-lg text-ink-secondary">
           Everything you need to know before you start writing.
         </p>
-      </div>
+      </Reveal>
       <div className="mx-auto mt-12 max-w-3xl space-y-3">
         {FAQ_ITEMS.map((item, index) => (
           <details
