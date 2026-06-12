@@ -17,6 +17,11 @@ const serverConfigSchema = z.object({
     .enum(['true', 'false'])
     .default('false')
     .transform(value => value === 'true'),
+  // Stripe (test mode). Optional at parse time so the app builds without
+  // billing configured; the stripe client throws a clear error when used.
+  stripeSecretKey: z.string().optional(),
+  stripeWebhookSecret: z.string().optional(),
+  stripePriceId: z.string().optional(),
 });
 
 export const serverConfig = serverConfigSchema.parse({
@@ -26,4 +31,7 @@ export const serverConfig = serverConfigSchema.parse({
   databasePath: process.env.DATABASE_PATH,
   cookieSecure: process.env.COOKIE_SECURE,
   rateLimitDisabled: process.env.RATE_LIMIT_DISABLED,
+  stripeSecretKey: process.env.STRIPE_SECRET_KEY,
+  stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+  stripePriceId: process.env.STRIPE_PRICE_ID,
 });
