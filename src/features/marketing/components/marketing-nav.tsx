@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { PillLink } from '@/features/marketing/components/pill-link';
+import { getServerSession } from '@/lib/auth/server-session';
 
 const NAV_LINKS = [
   { href: '#features', label: 'Features' },
@@ -8,7 +9,9 @@ const NAV_LINKS = [
   { href: '#faq', label: 'FAQ' },
 ] as const;
 
-export function MarketingNav() {
+export async function MarketingNav() {
+  const session = await getServerSession();
+
   return (
     <header
       className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-6 py-6"
@@ -36,20 +39,32 @@ export function MarketingNav() {
         ))}
       </nav>
       <div className="flex items-center gap-4">
-        <Link
-          href="/login"
-          className="text-base text-ink-secondary transition-colors hover:text-ink"
-          data-id="nav-login"
-        >
-          Log in
-        </Link>
-        <PillLink
-          href="/register"
-          className="px-5 py-2.5 text-base"
-          data-id="nav-cta"
-        >
-          Try it free
-        </PillLink>
+        {session ? (
+          <PillLink
+            href="/documents"
+            className="px-5 py-2.5 text-base"
+            data-id="nav-open-app"
+          >
+            Open Drafty
+          </PillLink>
+        ) : (
+          <>
+            <Link
+              href="/login"
+              className="text-base text-ink-secondary transition-colors hover:text-ink"
+              data-id="nav-login"
+            >
+              Log in
+            </Link>
+            <PillLink
+              href="/register"
+              className="px-5 py-2.5 text-base"
+              data-id="nav-cta"
+            >
+              Try Drafty free
+            </PillLink>
+          </>
+        )}
       </div>
     </header>
   );

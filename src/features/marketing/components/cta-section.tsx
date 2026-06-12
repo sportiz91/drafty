@@ -17,7 +17,7 @@ export function CtaSection() {
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <PillLink href="/register" data-id="cta-band-cta">
-              Try Drafty for free
+              Try Drafty free
             </PillLink>
             <PillLink href="#pricing" variant="secondary">
               See pricing

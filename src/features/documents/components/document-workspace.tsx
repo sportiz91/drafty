@@ -17,7 +17,7 @@ const SAVE_LABELS: Record<SaveState, string> = {
   idle: '',
   saving: 'Saving…',
   saved: 'Saved',
-  error: 'Save failed — retrying on next change',
+  error: 'Save failed. Retrying on next change.',
 };
 
 type DocumentWorkspaceProps = {

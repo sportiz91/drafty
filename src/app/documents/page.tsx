@@ -35,7 +35,7 @@ export default async function DocumentsPage({
             className="mb-6 rounded-[var(--radius-button)] bg-surface px-5 py-4 text-sm text-ink-secondary shadow-[var(--shadow-card)]"
             data-id="checkout-processing"
           >
-            Payment received — your workspace unlocks as soon as Stripe confirms
+            Payment received. Your workspace unlocks as soon as Stripe confirms
             it (usually instant). Refresh in a moment if you don&apos;t see it.
           </p>
         ) : null}
@@ -44,7 +44,7 @@ export default async function DocumentsPage({
             className="mb-6 rounded-[var(--radius-button)] bg-surface px-5 py-4 text-sm text-ink-secondary shadow-[var(--shadow-card)]"
             data-id="checkout-cancelled"
           >
-            Checkout cancelled — you can subscribe whenever you&apos;re ready.
+            Checkout cancelled. You can subscribe whenever you&apos;re ready.
           </p>
         ) : null}
         <section

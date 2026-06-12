@@ -15,12 +15,15 @@ describe('Marketing home page', () => {
     ).toBeInTheDocument();
   });
 
-  it('links the hero CTA to registration', () => {
+  it('links every primary CTA to registration', () => {
     render(<MarketingHomePage />);
 
-    expect(
-      screen.getByRole('link', { name: 'Try Drafty free' })
-    ).toHaveAttribute('href', '/register');
+    const ctas = screen.getAllByRole('link', { name: 'Try Drafty free' });
+
+    expect(ctas.length).toBeGreaterThanOrEqual(2);
+    for (const cta of ctas) {
+      expect(cta).toHaveAttribute('href', '/register');
+    }
   });
 
   it('links both pricing plans to registration', () => {

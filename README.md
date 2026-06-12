@@ -132,6 +132,16 @@ and `promote` (the adversarial review gate before `main`). An agent picking up t
 first and inherits the standards instead of improvising them. They double as honest documentation of
 the engineering decisions for human reviewers.
 
+## Credits (starters and references)
+
+- **Design**: the visual language (pill buttons, card rhythm, tokens) is adapted from the Airy
+  Framer template as a reference — rebuilt from scratch as Tailwind utilities, no template code
+  imported.
+- **Auth & Stripe scaffolding**: ported from my own private starter projects, then reworked for this
+  assignment — refresh-token rotation with hashed storage, the idempotent webhook fulfillment, and
+  the scoped billing-portal configuration were added or rewritten here.
+- **Editor**: TipTap StarterKit, following the official docs patterns.
+
 ## Tradeoffs (and what I'd do next with another day)
 
 - **SQLite + better-sqlite3** over Postgres: zero-infra setup for reviewers, plenty for the
