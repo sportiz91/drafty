@@ -14,6 +14,11 @@ describe('sanitizeRedirect', () => {
     expect(sanitizeRedirect('//evil.com')).toBe('/documents');
   });
 
+  it('falls back on backslash variants (browser-normalized to //)', () => {
+    expect(sanitizeRedirect('/\\evil.com')).toBe('/documents');
+    expect(sanitizeRedirect('/\\/evil.com')).toBe('/documents');
+  });
+
   it('falls back when missing', () => {
     expect(sanitizeRedirect(undefined)).toBe('/documents');
   });

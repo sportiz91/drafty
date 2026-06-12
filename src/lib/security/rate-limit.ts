@@ -29,7 +29,12 @@ export function rateLimit(
   return true;
 }
 
-/** First hop of x-forwarded-for, or a stable fallback for direct hits. */
+/**
+ * First hop of x-forwarded-for, or a stable fallback for direct hits.
+ * Known limitation: without a reverse proxy overwriting this header, a
+ * client can spoof it to rotate buckets — acceptable here (local-first
+ * assignment); real deploys terminate behind a proxy that sets it.
+ */
 export function getClientIp(request: NextRequest): string {
   return (
     request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'local'
