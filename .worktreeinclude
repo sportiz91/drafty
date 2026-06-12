@@ -1,0 +1,4 @@
+# Gitignored local files copied into every Claude-created worktree by the
+# WorktreeCreate hook (.claude/scripts/worktree-create.sh).
+.env.local
+scripts/check-secrets.local.json
