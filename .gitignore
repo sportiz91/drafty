@@ -53,3 +53,7 @@ next-env.d.ts
 
 # machine-local secret-scan patterns (must never be committed)
 scripts/check-secrets.local.json
+
+# playwright artifacts
+/test-results
+/playwright-report
