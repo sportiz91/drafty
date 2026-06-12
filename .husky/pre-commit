@@ -1,3 +1,14 @@
 node scripts/check-secrets.mjs
+
+# Non-blocking reminder: security-sensitive paths deserve the security-review
+# skill checklist (the hard AI review gate runs at promote time).
+RISKY=$(git diff --cached --name-only | grep -E '^src/(app/api/|lib/auth/|lib/security/|middleware\.ts)' || true)
+if [ -n "$RISKY" ]; then
+  echo ""
+  echo "[!] security-sensitive files staged — walk the security-review checklist:"
+  echo "$RISKY" | sed 's/^/    /'
+  echo ""
+fi
+
 pnpm exec lint-staged
 pnpm run type-check
