@@ -5,6 +5,7 @@ import {
   REFRESH_TOKEN_COOKIE,
   setAuthCookies,
 } from '@/lib/auth/auth-cookies';
+import { enforceRateLimit } from '@/lib/security/rate-limit';
 import * as tokenService from '@/services/token.service';
 
 /**
@@ -12,6 +13,11 @@ import * as tokenService from '@/services/token.service';
  * Rotates the refresh token and issues a new token pair.
  */
 export async function POST(request: NextRequest) {
+  const limited = enforceRateLimit(request, 'refresh', 10, 60_000);
+  if (limited) {
+    return limited;
+  }
+
   const refreshToken = request.cookies.get(REFRESH_TOKEN_COOKIE)?.value;
 
   if (!refreshToken) {
