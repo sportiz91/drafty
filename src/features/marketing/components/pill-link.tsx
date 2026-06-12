@@ -2,13 +2,12 @@ import Link from 'next/link';
 import type { ComponentPropsWithoutRef } from 'react';
 
 type PillLinkProps = {
-  variant?: 'primary' | 'secondary' | 'accent';
+  variant?: 'primary' | 'secondary';
 } & ComponentPropsWithoutRef<typeof Link>;
 
 const VARIANT_CLASSES = {
   primary: 'bg-ink/90 text-white hover:bg-ink/80',
   secondary: 'bg-surface text-ink hover:bg-surface-muted',
-  accent: 'bg-accent text-white hover:opacity-90',
 } as const;
 
 export function PillLink({

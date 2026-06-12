@@ -16,7 +16,7 @@ export function CtaSection() {
             Free to look around. One plan when you need it.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <PillLink href="/register" variant="accent" data-id="cta-band-cta">
+            <PillLink href="/register" data-id="cta-band-cta">
               Try Drafty for free
             </PillLink>
             <PillLink href="#pricing" variant="secondary">
