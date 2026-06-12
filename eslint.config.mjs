@@ -77,7 +77,6 @@ const eslintConfig = [
       'coverage/**',
       'playwright-report/**',
       'test-results/**',
-      '.claude/scripts/**',
       'next-env.d.ts',
     ],
   },
