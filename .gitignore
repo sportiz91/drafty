@@ -50,3 +50,6 @@ next-env.d.ts
 
 # local Claude Code settings (permissions) — skills ARE committed
 .claude/settings.local.json
+
+# machine-local secret-scan patterns (must never be committed)
+scripts/check-secrets.local.json

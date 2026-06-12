@@ -23,6 +23,21 @@ const PATTERNS = [
   },
 ];
 
+// Optional machine-local patterns (gitignored — never committed). Lets a
+// developer block strings that must not appear in this public repo without
+// the blocklist itself disclosing them.
+try {
+  const { default: fs } = await import('node:fs');
+  const local = JSON.parse(
+    fs.readFileSync('scripts/check-secrets.local.json', 'utf8')
+  );
+  for (const { name, pattern } of local) {
+    PATTERNS.push({ name, regex: new RegExp(pattern, 'i') });
+  }
+} catch {
+  // No local pattern file — fine.
+}
+
 // Files allowed to contain pattern-matching strings (placeholders, test
 // fixtures, this scanner itself).
 const ALLOWED_FILES = new Set([
