@@ -85,7 +85,7 @@ handler → service → db action → db**:
 | -------------------------- | ---------------------------------------------------- |
 | `pnpm dev`                 | Dev server (Turbopack)                               |
 | `pnpm build && pnpm start` | Production build + serve (webpack — see limitations) |
-| `pnpm test:unit`           | Jest unit suite (51 tests, colocated specs)          |
+| `pnpm test:unit`           | Jest unit suite (54 tests, colocated specs)          |
 | `pnpm test:e2e`            | Playwright e2e (starts its own server)               |
 | `pnpm code-quality`        | format check + lint + type-check                     |
 
@@ -130,7 +130,7 @@ it honestly instead of faking a pass.
 ## AI usage (AI-native note)
 
 Built pair-programming with Claude Code. The AI never merged unreviewed: project skills encode the
-conventions it must follow, husky and CI gate every commit (secret scan, lint, types, 51 unit and 8
+conventions it must follow, husky and CI gate every commit (secret scan, lint, types, 54 unit and 8
 e2e tests), and the promote workflow includes a mandatory adversarial AI review pass — which caught
 real bugs before main (e.g. a backslash open-redirect variant in the login redirect). Every flow in
 the acceptance checklist was also verified manually in the browser.
