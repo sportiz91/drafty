@@ -64,14 +64,65 @@ export function createSubscriptionCheckoutSession(
   });
 }
 
-export function createBillingPortalSession(
+/**
+ * The account's DEFAULT portal configuration lists every product in the
+ * Stripe account for plan switches, so unrelated (test) products would
+ * show up next to Drafty Pro. A dedicated configuration scopes the portal
+ * to what Drafty supports — cancel, payment method, invoices; no plan
+ * switching, there is a single plan — on any Stripe account.
+ */
+let portalConfigurationId: string | null = null;
+
+async function getDraftyPortalConfigurationId(): Promise<string> {
+  if (portalConfigurationId) {
+    return portalConfigurationId;
+  }
+
+  const stripe = getStripeClient();
+  const { data } = await stripe.billingPortal.configurations.list({
+    active: true,
+    limit: 100,
+  });
+  const existing = data.find(
+    configuration => configuration.metadata?.app === 'drafty'
+  );
+
+  if (existing) {
+    portalConfigurationId = existing.id;
+    return existing.id;
+  }
+
+  const created = await stripe.billingPortal.configurations.create({
+    business_profile: { headline: 'Drafty Pro' },
+    features: {
+      invoice_history: { enabled: true },
+      payment_method_update: { enabled: true },
+      subscription_cancel: { enabled: true, mode: 'at_period_end' },
+    },
+    metadata: { app: 'drafty' },
+  });
+  portalConfigurationId = created.id;
+
+  return created.id;
+}
+
+export async function createBillingPortalSession(
   stripeCustomerId: string,
   origin: string
 ): Promise<Stripe.BillingPortal.Session> {
-  return getStripeClient().billingPortal.sessions.create({
+  const params: Stripe.BillingPortal.SessionCreateParams = {
     customer: stripeCustomerId,
     return_url: `${origin}/documents`,
-  });
+  };
+
+  try {
+    params.configuration = await getDraftyPortalConfigurationId();
+  } catch (error) {
+    // A portal on the account's default configuration beats no portal.
+    console.error('Falling back to the default portal configuration:', error);
+  }
+
+  return getStripeClient().billingPortal.sessions.create(params);
 }
 
 export function getSubscription(
