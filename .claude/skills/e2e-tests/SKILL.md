@@ -41,6 +41,17 @@ pnpm exec playwright show-report             # after failures
 - **DB state**: tests run against the local SQLite file; each test creates what it needs and never
   assumes seeds.
 
+## Gotchas (hard-won)
+
+- **Cold dev-server compiles**: locally the suite runs against `pnpm dev`, which compiles routes on
+  demand — the first navigation after a cold start can take >5s. `expect.timeout` is set to 10s in
+  `playwright.config.ts`; don't "fix" slow first assertions by adding waits.
+- **Rate limits**: the webServer config sets `RATE_LIMIT_DISABLED=true` (the suite fires many auth
+  requests from one IP). Rate limiting itself is unit-tested — never disable it anywhere else.
+- **Standalone debug scripts** (`node script.mjs` with chromium) do NOT read `playwright.config.ts`,
+  so `getByTestId` falls back to `data-testid`. Use raw `page.locator('[data-id="..."]')` selectors
+  in throwaway scripts.
+
 ## CI
 
 The `e2e-tests` job runs last in the pipeline (after lint/format/type/unit), against the production
