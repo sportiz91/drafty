@@ -1,0 +1,15 @@
+import { z } from 'zod';
+
+export const registerSchema = z.object({
+  email: z.email().max(255),
+  // bcrypt truncates beyond 72 bytes
+  password: z.string().min(8).max(72),
+});
+
+export const loginSchema = z.object({
+  email: z.email().max(255),
+  password: z.string().min(1),
+});
+
+export type RegisterInput = z.infer<typeof registerSchema>;
+export type LoginInput = z.infer<typeof loginSchema>;
