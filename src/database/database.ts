@@ -4,6 +4,7 @@ import path from 'path';
 import Database from 'better-sqlite3';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
 
+import { documents } from '@/database/schema/documents-schema';
 import { refreshTokens } from '@/database/schema/refresh-tokens-schema';
 import {
   stripeEvents,
@@ -32,5 +33,5 @@ if (serverConfig.nodeEnv !== 'production') {
 }
 
 export const db = drizzle(sqlite, {
-  schema: { users, refreshTokens, subscriptions, stripeEvents },
+  schema: { users, refreshTokens, subscriptions, stripeEvents, documents },
 });
