@@ -73,6 +73,13 @@ export async function getAuthenticatedUser(
   return user ? toPublicUser(user) : null;
 }
 
+/** Full record for server-side use (billing needs stripeCustomerId). */
+export async function getAuthenticatedUserRecord(
+  userId: string
+): Promise<User | null> {
+  return (await userActions.getUserById(userId)) ?? null;
+}
+
 export async function logout(refreshToken: string | undefined): Promise<void> {
   if (refreshToken) {
     await tokenService.revokeRefreshToken(refreshToken);

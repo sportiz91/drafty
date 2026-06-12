@@ -4,7 +4,12 @@ import path from 'path';
 import Database from 'better-sqlite3';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
 
+import { documents } from '@/database/schema/documents-schema';
 import { refreshTokens } from '@/database/schema/refresh-tokens-schema';
+import {
+  stripeEvents,
+  subscriptions,
+} from '@/database/schema/subscriptions-schema';
 import { users } from '@/database/schema/users-schema';
 import { serverConfig } from '@/lib/config/config';
 
@@ -27,4 +32,6 @@ if (serverConfig.nodeEnv !== 'production') {
   globalForDb.sqlite = sqlite;
 }
 
-export const db = drizzle(sqlite, { schema: { users, refreshTokens } });
+export const db = drizzle(sqlite, {
+  schema: { users, refreshTokens, subscriptions, stripeEvents, documents },
+});

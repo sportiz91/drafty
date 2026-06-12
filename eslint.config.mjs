@@ -68,6 +68,8 @@ const eslintConfig = [
   prettierConfig,
   {
     ignores: [
+      // Local tooling hooks (plain Node scripts), not app code.
+      '.claude/**',
       'node_modules/**',
       '.next/**',
       'out/**',

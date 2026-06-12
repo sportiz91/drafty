@@ -41,6 +41,32 @@ pnpm exec playwright show-report             # after failures
 - **DB state**: tests run against the local SQLite file; each test creates what it needs and never
   assumes seeds.
 
+## Live billing e2e (Stripe hosted checkout)
+
+`e2e/billing.spec.ts` drives the REAL hosted checkout. It needs local setup, so it's gated:
+
+```bash
+# 1. Stripe env present in .env.local (secret key, webhook secret, price id)
+# 2. Server + webhook forwarding running:
+pnpm run build && pnpm run start &
+stripe listen --forward-to localhost:3000/api/vendor/stripe/webhooks &
+# 3. Run gated:
+STRIPE_E2E=1 pnpm exec playwright test e2e/billing.spec.ts
+```
+
+CI skips it (no Stripe secrets) via `test.skip(!process.env.STRIPE_E2E, ...)` — an honest skip, not
+a silent pass. Hosted-checkout automation gotchas:
+
+- **Stripe's page uses `data-testid`** — our `testIdAttribute` is `data-id`, so `getByTestId`
+  silently never matches there. Use explicit `page.locator('[data-testid="..."]')` on Stripe pages
+  (`hosted-payment-submit-button` is the pay button).
+- **Country drives required fields**: select `#billingCountry` = US and fill `#billingPostalCode`
+  (ZIP only) — other countries demand full addresses.
+- Card fields are plain ids: `#cardNumber`, `#cardExpiry`, `#cardCvc`, `#billingName`.
+- **Webhook lag**: after the success redirect, entitlement arrives asynchronously — assert with the
+  poll-with-reload pattern (`expect(async () => { reload; assert }).toPass({ timeout })`), never a
+  bare assertion on first paint.
+
 ## Gotchas (hard-won)
 
 - **Cold dev-server compiles**: locally the suite runs against `pnpm dev`, which compiles routes on

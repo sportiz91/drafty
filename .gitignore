@@ -57,3 +57,6 @@ scripts/check-secrets.local.json
 # playwright artifacts
 /test-results
 /playwright-report
+
+# session handoff (local only)
+/HANDOFF.md

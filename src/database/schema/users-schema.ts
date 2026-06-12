@@ -6,6 +6,7 @@ export const users = sqliteTable('users', {
     .$defaultFn(() => crypto.randomUUID()),
   email: text('email').notNull().unique(),
   passwordHash: text('password_hash').notNull(),
+  stripeCustomerId: text('stripe_customer_id').unique(),
   createdAt: integer('created_at', { mode: 'timestamp' })
     .notNull()
     .$defaultFn(() => new Date()),
