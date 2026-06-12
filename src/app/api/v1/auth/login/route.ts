@@ -8,6 +8,7 @@ import {
   readJsonBody,
 } from '@/lib/security/read-json-body';
 import * as authService from '@/services/auth.service';
+import { InvalidCredentialsError } from '@/services/service-errors';
 import { loginSchema } from '@/validators/auth.validators';
 
 /**
@@ -48,7 +49,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (error instanceof Error && error.message === 'Invalid credentials') {
+    if (error instanceof InvalidCredentialsError) {
       return NextResponse.json({ error: error.message }, { status: 401 });
     }
 

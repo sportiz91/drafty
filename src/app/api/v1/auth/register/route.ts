@@ -8,6 +8,7 @@ import {
   readJsonBody,
 } from '@/lib/security/read-json-body';
 import * as authService from '@/services/auth.service';
+import { EmailAlreadyRegisteredError } from '@/services/service-errors';
 import { registerSchema } from '@/validators/auth.validators';
 
 /**
@@ -48,10 +49,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (
-      error instanceof Error &&
-      error.message === 'Email already registered'
-    ) {
+    if (error instanceof EmailAlreadyRegisteredError) {
       return NextResponse.json({ error: error.message }, { status: 409 });
     }
 

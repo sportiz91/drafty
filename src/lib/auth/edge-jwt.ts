@@ -20,5 +20,11 @@ export async function verifyAccessTokenEdge(
     algorithms: ['HS256'],
   });
 
-  return payload as unknown as AccessTokenPayload;
+  const { userId, email } = payload;
+
+  if (typeof userId !== 'string' || typeof email !== 'string') {
+    throw new Error('Malformed token payload');
+  }
+
+  return { userId, email };
 }

@@ -30,6 +30,8 @@ export async function generateAuthTokens(user: {
   const accessToken = jwt.sign(
     { userId: user.id, email: user.email },
     serverConfig.jwtSecret,
+    // Cast constraint: jsonwebtoken types expiresIn as a template-literal
+    // duration; our value is a validated env string ("15m" by default).
     { expiresIn: serverConfig.jwtAccessTokenExpiry } as SignOptions
   );
 
@@ -63,10 +65,13 @@ export function verifyAccessToken(token: string): AccessTokenPayload {
       throw new Error('Unexpected token payload');
     }
 
-    return {
-      userId: payload['userId'] as string,
-      email: payload['email'] as string,
-    };
+    const { userId, email } = payload;
+
+    if (typeof userId !== 'string' || typeof email !== 'string') {
+      throw new Error('Malformed token payload');
+    }
+
+    return { userId, email };
   } catch {
     throw new Error('Invalid access token');
   }

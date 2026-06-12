@@ -2,6 +2,10 @@ import bcrypt from 'bcryptjs';
 
 import * as userActions from '@/database/actions/user-actions';
 import type { User } from '@/database/schema/users-schema';
+import {
+  EmailAlreadyRegisteredError,
+  InvalidCredentialsError,
+} from '@/services/service-errors';
 import * as tokenService from '@/services/token.service';
 import type { AuthTokens, PublicUser } from '@/types/auth.types';
 import type { LoginInput, RegisterInput } from '@/validators/auth.validators';
@@ -30,7 +34,7 @@ export async function register(
   const existing = await userActions.getUserByEmail(email);
 
   if (existing) {
-    throw new Error('Email already registered');
+    throw new EmailAlreadyRegisteredError();
   }
 
   const passwordHash = await bcrypt.hash(input.password, BCRYPT_ROUNDS);
@@ -53,7 +57,7 @@ export async function login(
   );
 
   if (!user || !passwordMatches) {
-    throw new Error('Invalid credentials');
+    throw new InvalidCredentialsError();
   }
 
   const tokens = await tokenService.generateAuthTokens(user);
