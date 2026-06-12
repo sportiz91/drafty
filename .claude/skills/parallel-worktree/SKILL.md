@@ -18,8 +18,10 @@ per worktree.
 Parallelize only across independent areas (marketing pages vs editor vs API). Two tasks touching the
 same module belong in ONE worktree, sequentially — same-file parallel work is how merge conflicts
 are born. Shared hotspots to check before splitting: `package.json` (deps), `globals.css` (tokens),
-`src/app/page.tsx`, DB schema/migrations. If both tasks need any of them, decide ownership up front
-(one side adds deps, the other adds none).
+`src/app/page.tsx`, DB schema/migrations, and tooling config (`eslint.config.mjs`,
+`.github/workflows/`) — the one that actually bit: two sessions added overlapping eslint ignores
+independently and a cleanup chore followed. If both tasks need any of them, decide ownership up
+front (one side adds deps, the other adds none).
 
 ## Create
 
@@ -31,6 +33,10 @@ cd ~/drafty-<name> && pnpm install
 ```
 
 - Branch from `origin/development` — that's where feature work lands; never from main.
+- **Check the base is green BEFORE building on it**: `gh run list --branch development --limit 1`. A
+  red base makes every child PR red, and you only find out at lint/CI time. If it is red, fix it as
+  the FIRST commit of the feature branch (precedent: PR #2 led with the eslint fix for the broken
+  session-hooks commit).
 - **Disk math (C: is tight on this machine):** `pnpm install` hard-links from the shared store — a
   worktree's node_modules costs directory structure only (~tens of MB), not content. What DOES cost
   real disk is `next build` (`.next/` ≈ 300MB) — worktrees run lint/type-check/unit only; the final
