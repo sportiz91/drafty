@@ -32,8 +32,12 @@ composition-patterns), typescript-cheatsheets/react, react-philosophies.
 - Use ternaries for conditional render, not `&&` (the `0 &&` footgun).
 - `children` is the cheapest re-render optimization: JSX passed as children doesn't re-render when
   the wrapper's state changes — restructure before reaching for `memo`.
-- Naming: directories kebab-case, named exports, handlers `handle*`, booleans `is*/has*`. File
-  order: exported component → subcomponents → helpers → types.
+- Naming: directories kebab-case, named exports, handlers `handle*`, booleans `is*/has*`, hooks
+  `use*`. File order: exported component → subcomponents → helpers → types.
+- One component per file; an unexported, genuinely tiny subcomponent may stay inline — the moment it
+  grows or needs its own test, it moves to its own file.
+- Inside a component, keep a consistent order: hooks → effects → derived values → event handlers →
+  return. Readers learn the rhythm once and never hunt.
 
 ## React 19
 
@@ -59,6 +63,17 @@ composition-patterns), typescript-cheatsheets/react, react-philosophies.
   render or `useMemo`. (#1 React anti-pattern.)
 - `useState(() => expensiveFn())` — lazy initializer, never `useState(expensiveFn())`.
 
+## Effects
+
+- `useEffect` is ONLY for synchronizing with systems outside React — DOM/browser APIs, timers, SDK
+  instances (e.g. the TipTap editor), subscriptions.
+- Never in an effect: derived data (compute in render or `useMemo`), reacting to a user event
+  (notifications, analytics, and mutations belong in the handler that caused them), or fetching
+  server data (React Query / server components own that in this repo).
+- External-store subscriptions → `useSyncExternalStore`, not addEventListener-in-an-effect.
+- Any async effect must guard against races: `let active = true` in the effect body, check it before
+  every `setState`, cleanup flips it to `false`.
+
 ## TypeScript
 
 - `children?: React.ReactNode`. `JSX.Element` only when you mean "exactly one element".
@@ -66,6 +81,15 @@ composition-patterns), typescript-cheatsheets/react, react-philosophies.
 - Discriminated unions for variant props instead of optional-everything.
 - No `enum` — const maps with `as const` (+ `satisfies` for config validation).
 - Convention in this repo: `type` for component props; `interface` only for extensible contracts.
+- `useState<User | null>(null)` — explicit generic when the initial value doesn't reveal the full
+  type; let primitives infer (`useState(0)`).
+- Props are destructured in the parameter with the type annotation
+  (`const Button = ({ onClick, children }: ButtonProps) =>`), props type declared above the
+  component.
+- Avoid `as` assertions — narrow with type guards (`instanceof`, `in`, custom predicates) so the
+  compiler proves it.
+- Generic components (`<Select<T> items={...}>`) when a component works over different item types —
+  keep type safety instead of widening to `unknown`/union soup.
 
 ## Forms
 
