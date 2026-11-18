@@ -26,6 +26,9 @@ importers:
       better-sqlite3:
         specifier: ^12.10.0
         version: 12.10.0
+      dictionary-es:
+        specifier: ^4.0.0
+        version: 4.0.0
       drizzle-orm:
         specifier: ^0.45.2
         version: 0.45.2(@types/better-sqlite3@7.6.13)(better-sqlite3@12.10.0)
@@ -38,6 +41,9 @@ importers:
       next:
         specifier: 15.5.19
         version: 15.5.19(@babel/core@7.29.7)(@playwright/test@1.60.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      nspell:
+        specifier: ^2.1.5
+        version: 2.1.5
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -2291,6 +2297,9 @@ packages:
     resolution: {integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==}
     engines: {node: '>=8'}
 
+  dictionary-es@4.0.0:
+    resolution: {integrity: sha512-8J3IYdaHYmkojxqhB+DneQpek6N/s3MwbVk3bPNGQSTBT5kxJtmbuiT0LSDP0Al6K9Vevo1sjspG8AGP9Yvxiw==}
+
   doctrine@2.1.0:
     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==}
     engines: {node: '>=0.10.0'}
@@ -2995,6 +3004,10 @@ packages:
     resolution: {integrity: sha512-wa56o2/ElJMYqjCjGkXri7it5FbebW5usLw/nPmCMs5DeZ7eziSYZhSmPRn0txqeW4LnAmQQU7FgqLpsEFKM4A==}
     engines: {node: '>= 0.4'}
 
+  is-buffer@2.0.5:
+    resolution: {integrity: sha512-i2R6zNFDwgEHJyQUtJEk0XFi1i0dPFn/oqjK3/vPCcDeJvW5NQ83V8QbicfF1SupOaB0h8ntgBC2YiE7dfyctQ==}
+    engines: {node: '>=4'}
+
   is-bun-module@2.0.0:
     resolution: {integrity: sha512-gNCGbnnnnFAUGKeZ9PdbyeGYJqewpmc2aKHUEMO5nQPWU9lOmv7jcmQIv+qHD8fXW6W7qfuCwX4rY9LNRjXrkQ==}
 
@@ -3645,6 +3658,9 @@ packages:
   npm-run-path@4.0.1:
     resolution: {integrity: sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw==}
     engines: {node: '>=8'}
+
+  nspell@2.1.5:
+    resolution: {integrity: sha512-PSStyugKMiD9mHmqI/CR5xXrSIGejUXPlo88FBRq5Og1kO5QwQ5Ilu8D8O5I/SHpoS+mibpw6uKA8rd3vXd2Sg==}
 
   nwsapi@2.2.24:
     resolution: {integrity: sha512-7YRhZ3jS45LwmSCT4b2sVFHt/WuovaktDU07QrtOBY2PXskss5a9jfmR9jptyumwXST+rFjrmppMY1KT/yn35A==}
@@ -6562,6 +6578,8 @@ snapshots:
 
   detect-newline@3.1.0: {}
 
+  dictionary-es@4.0.0: {}
+
   doctrine@2.1.0:
     dependencies:
       esutils: 2.0.3
@@ -7391,6 +7409,8 @@ snapshots:
       call-bound: 1.0.4
       has-tostringtag: 1.0.2
 
+  is-buffer@2.0.5: {}
+
   is-bun-module@2.0.0:
     dependencies:
       semver: 7.8.4
@@ -8206,6 +8226,10 @@ snapshots:
   npm-run-path@4.0.1:
     dependencies:
       path-key: 3.1.1
+
+  nspell@2.1.5:
+    dependencies:
+      is-buffer: 2.0.5
 
   nwsapi@2.2.24: {}
 

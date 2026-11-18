@@ -3,6 +3,13 @@
 import { EditorContent, useEditor, type Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 
+import { SpellCheck } from '@/features/documents/spell-check/spell-check-extension';
+import { SpellCheckPopup } from '@/features/documents/spell-check/spell-check-popup';
+import {
+  useSpellCheck,
+  type SpellCheckControls,
+} from '@/features/documents/spell-check/use-spell-check';
+
 type DocumentEditorProps = {
   initialContentHtml: string;
   onContentChange: (contentHtml: string) => void;
@@ -13,7 +20,7 @@ export function DocumentEditor({
   onContentChange,
 }: DocumentEditorProps) {
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [StarterKit, SpellCheck],
     content: initialContentHtml,
     // SSR requirement: render nothing on the server, mount client-side.
     immediatelyRender: false,
@@ -28,10 +35,24 @@ export function DocumentEditor({
     },
   });
 
+  const spellCheck = useSpellCheck(editor);
+
   return (
     <div className="pt-5">
-      {editor ? <EditorToolbar editor={editor} /> : null}
+      {editor ? (
+        <EditorToolbar editor={editor} spellCheck={spellCheck} />
+      ) : null}
       <EditorContent editor={editor} className="mt-4" />
+      {spellCheck.popup ? (
+        <SpellCheckPopup
+          word={spellCheck.popup.word}
+          suggestions={spellCheck.popup.suggestions}
+          position={spellCheck.popup.position}
+          onSelect={spellCheck.selectSuggestion}
+          onIgnore={spellCheck.ignore}
+          onClose={spellCheck.closePopup}
+        />
+      ) : null}
     </div>
   );
 }
@@ -78,7 +99,13 @@ const TOOLBAR_ACTIONS: {
   },
 ];
 
-function EditorToolbar({ editor }: { editor: Editor }) {
+function EditorToolbar({
+  editor,
+  spellCheck,
+}: {
+  editor: Editor;
+  spellCheck: SpellCheckControls;
+}) {
   return (
     <div
       className="flex gap-1 rounded-[var(--radius-button)] bg-surface-muted p-1"
@@ -96,6 +123,28 @@ function EditorToolbar({ editor }: { editor: Editor }) {
           {action.label}
         </button>
       ))}
+
+      {/* Spell check is a mode, not a formatting action — set it apart. */}
+      <span aria-hidden className="mx-0.5 w-px self-stretch bg-border" />
+      <button
+        type="button"
+        data-id="spell-check-toggle"
+        aria-pressed={spellCheck.active}
+        disabled={spellCheck.loading}
+        title={
+          spellCheck.loading
+            ? 'Loading dictionary…'
+            : 'Spell check (Spanish): underline misspelled words'
+        }
+        onClick={spellCheck.toggle}
+        className={`min-w-9 rounded-lg px-2 py-1.5 text-sm font-medium transition-colors disabled:opacity-60 ${
+          spellCheck.active
+            ? 'bg-accent text-white'
+            : 'text-ink-secondary hover:bg-surface'
+        }`}
+      >
+        ABC
+      </button>
     </div>
   );
 }

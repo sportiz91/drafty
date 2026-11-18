@@ -48,6 +48,9 @@ next-env.d.ts
 # local sqlite database
 /data
 
+# spanish dictionary synced from dictionary-es on install (scripts/sync-dictionaries.mjs)
+/public/dictionaries
+
 # local Claude Code settings (permissions) — skills ARE committed
 .claude/settings.local.json
 
